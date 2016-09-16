@@ -1,0 +1,5 @@
+{
+    "name": "your steem name",
+    "wif": "your active private key",
+    "interval": 60
+}
