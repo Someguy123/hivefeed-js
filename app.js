@@ -7,10 +7,12 @@
  * Requires Node v6.3+
  */
 
-var options = {}
+var config = require('./config.json');
+if(!('node' in config)) { config['node'] = 'wss://node.steem.ws'; }
+
+var options = {url: config['node']}
 var { TransactionBuilder, Login } = require('steemjs-lib');
 var {Client} = require('steem-rpc');
-var config = require('./config.json');
 var Api = Client.get(options, true);
 var request = require('request');
 // Needs to be global scope to access elsewhere
