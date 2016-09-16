@@ -4,7 +4,8 @@
   "description": "Steem Price Feed in JS using SteemValue API",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "author": "Chris <info@someguy123.com> (Someguy123)",
   "license": "GPL-3.0",
