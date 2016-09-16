@@ -31,5 +31,5 @@ docker logs feed
 **Starting Via NodeJS (assuming you have v6 installed)**
 ```
 npm install
-npm run
+npm start
 ```
