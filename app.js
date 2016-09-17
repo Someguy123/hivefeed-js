@@ -18,12 +18,12 @@ var request = require('request');
 // Needs to be global scope to access elsewhere
 var user = new Login();
 
+var shouldPublish = process.argv.length > 2 && process.argv[2] == "publishnow";
+
 function loginAccount(username, wif, roles, callback) {
     user.setRoles(roles);
-    console.log('begin connection', username);
 
     Api.initPromise.then(function(r) {
-        console.log(r);
         // step 1. find the account
         Api.database_api().exec("get_accounts", [[username]]).then(function(res) {
             console.log('finding account', username);
@@ -45,12 +45,11 @@ function loginAccount(username, wif, roles, callback) {
             // try to log in
             console.log('attempting to login account', username);
             try {
-            var success_key = user.checkKeys(user_data);
+                var success_key = user.checkKeys(user_data);
             } catch(e) {
                 success_key = false;
                 console.error('error logging in:', e);
             }
-            console.log(success_key);
             if(success_key) {
                 console.log('logged in');
                 callback(false, user);
@@ -75,7 +74,6 @@ function get_price(callback) {
         if('steem_usd' in prices) {
             var price = prices['steem_usd'];
         }
-        console.log(price);
         if(price == 0) {
             return callback(true,null);
         }
@@ -98,7 +96,8 @@ function publish_feed(rate, account_data) {
     } catch(e) {
         console.error(e);
     }
-    console.log('data published')
+    console.log('Data published at: ', ""+new Date())
+    console.log();
 }
 
 function main(account_data) {
@@ -117,8 +116,15 @@ loginAccount(config.name, config.wif, ['active'], function(err,account_data) {
         return process.exit();
     }
     console.log('Successfully logged into user', account_data.name);
-    console.log('Publishing immediately, then every %s minute(s)',config.interval);
-    main(account_data);
+    console.log();
+    if(shouldPublish) {
+        console.log('Publishing immediately, then every %s minute(s)',config.interval);
+        main(account_data);
+    } else {
+        console.log('Not publishing immediately');
+        console.log('If you want to update your price feed RIGHT NOW, use node app.js publishnow');
+    }
+    console.log();
     // convert interval to minutes
     var interval = parseInt(config.interval) * 1000 * 60;
     setInterval(function() { main(account_data) }, interval)
