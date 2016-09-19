@@ -9,6 +9,7 @@
 
 var config = require('./config.json');
 if(!('node' in config)) { config['node'] = 'wss://node.steem.ws'; }
+if(!('peg' in config)) { config['peg'] = true; }
 
 var options = {url: config['node']}
 var { TransactionBuilder, Login } = require('steemjs-lib');
@@ -104,6 +105,11 @@ function main(account_data) {
     get_price(function(err,price) {
         if(err) {
             return console.error('error loading prices, will retry later');
+        }
+        if(config.peg) {
+            console.log('Pegging is enabled. Reducing price by 10% (set config.peg to false to disable)');
+            console.log('Original price (pre-peg):', price.toFixed(3));
+            price = price * 0.9;
         }
         console.log('STEEM/USD is ', price.toFixed(3));
         publish_feed(price, account_data);
