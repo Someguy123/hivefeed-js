@@ -89,9 +89,15 @@ function publish_feed(rate, account_data) {
     try {
         var tr = new TransactionBuilder();
         var ex_data = rate.toFixed(3) + " SBD";
+        if(config.peg) {
+            var pcnt = ((1 - config['peg_multi']) * 100).toFixed(2)
+            console.log('Pegging is enabled. Reducing price by '+pcnt+'% (set config.peg to false to disable)');
+            console.log('Original price (pre-peg):', ex_data);
+            quote = 1 / config['peg_multi'];
+        }
         var feed_data = {
             publisher: account_data.name,
-            exchange_rate: {base: ex_data, quote: "1.000 STEEM"}
+            exchange_rate: {base: ex_data, quote: quote.toFixed(3) + " STEEM"}
         }
         tr.add_type_operation("feed_publish", feed_data);
         tr.process_transaction(account_data, null, true)
@@ -106,12 +112,6 @@ function main(account_data) {
     get_price(function(err,price) {
         if(err) {
             return console.error('error loading prices, will retry later');
-        }
-        if(config.peg) {
-            var pcnt = ((1 - config['peg_multi']) * 100).toFixed(2)
-            console.log('Pegging is enabled. Reducing price by '+pcnt+'% (set config.peg to false to disable)');
-            console.log('Original price (pre-peg):', price.toFixed(3));
-            price = price * config['peg_multi'];
         }
         console.log('STEEM/USD is ', price.toFixed(3));
         publish_feed(price, account_data);
