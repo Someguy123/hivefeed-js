@@ -8,6 +8,8 @@
  */
 
 var config = require('./config.json');
+var exchange = require('./lib/exchange');
+
 if(!('node' in config)) { config['node'] = 'wss://node.steem.ws'; }
 if(!('peg' in config)) { config['peg'] = true; }
 if(!('peg_multi' in config)) { config['peg_multi'] = 0.88; }
@@ -28,7 +30,7 @@ function loginAccount(username, wif, roles, callback) {
     Api.initPromise.then(function(r) {
         // step 1. find the account
         Api.database_api().exec("get_accounts", [[username]]).then(function(res) {
-            console.log('finding account', username);
+            log('finding account', username);
             if(res.length < 1) {
                 console.error('account not found')
                 return callback(true, null);
@@ -45,7 +47,7 @@ function loginAccount(username, wif, roles, callback) {
                 privateKey: config.wif
             };
             // try to log in
-            console.log('attempting to login account', username);
+            log('attempting to login account', username);
             try {
                 var success_key = user.checkKeys(user_data);
             } catch(e) {
@@ -53,7 +55,7 @@ function loginAccount(username, wif, roles, callback) {
                 console.error('error logging in:', e);
             }
             if(success_key) {
-                console.log('logged in');
+                log('logged in');
                 callback(false, user);
             } else {
                 console.error('failed to log in');
@@ -62,28 +64,34 @@ function loginAccount(username, wif, roles, callback) {
     });
 }
 
-function get_price(callback) {
-    request('https://value.steem.network/exdata.json', function(error,response,body) {
-        if(error || response.statusCode != 200) {
-            return callback(true,null);
-        }
-        var prices = JSON.parse(body),
-            price = 0;
-
-        if('usd_steem' in prices) {
-            var price = 1 / prices['usd_steem'];
-        }
-        if('steem_usd' in prices) {
-            var price = prices['steem_usd'];
-        }
-        if(price == 0) {
-            return callback(true,null);
-        }
-        return callback(false, parseFloat(price));
-    })
-    //callback(false, price);
-    //callback(true, null);
+var get_price = function(callback) {
+    exchange.get_pair('steem','usd', function(price) {
+        callback(false, parseFloat(price));
+    });
 }
+
+// function get_price(callback) {
+//     request('https://value.steem.network/exdata.json', function(error,response,body) {
+//         if(error || response.statusCode != 200) {
+//             return callback(true,null);
+//         }
+//         var prices = JSON.parse(body),
+//             price = 0;
+
+//         if('usd_steem' in prices) {
+//             var price = 1 / prices['usd_steem'];
+//         }
+//         if('steem_usd' in prices) {
+//             var price = prices['steem_usd'];
+//         }
+//         if(price == 0) {
+//             return callback(true,null);
+//         }
+//         return callback(false, parseFloat(price));
+//     })
+//     //callback(false, price);
+//     //callback(true, null);
+// }
 
 function publish_feed(rate, account_data) {
     try {
@@ -91,8 +99,8 @@ function publish_feed(rate, account_data) {
         var ex_data = rate.toFixed(3) + " SBD";
         if(config.peg) {
             var pcnt = ((1 - config['peg_multi']) * 100).toFixed(2)
-            console.log('Pegging is enabled. Reducing price by '+pcnt+'% (set config.peg to false to disable)');
-            console.log('Original price (pre-peg):', ex_data);
+            log('Pegging is enabled. Reducing price by '+pcnt+'% (set config.peg to false to disable)');
+            log('Original price (pre-peg):', ex_data);
             quote = 1 / config['peg_multi'];
         }
         var feed_data = {
@@ -104,7 +112,7 @@ function publish_feed(rate, account_data) {
     } catch(e) {
         console.error(e);
     }
-    console.log('Data published at: ', ""+new Date())
+    log('Data published at: ', ""+new Date())
     console.log();
 }
 
@@ -113,7 +121,7 @@ function main(account_data) {
         if(err) {
             return console.error('error loading prices, will retry later');
         }
-        console.log('STEEM/USD is ', price.toFixed(3));
+        log('STEEM/USD is ', price.toFixed(3));
         publish_feed(price, account_data);
     });
 }
@@ -123,14 +131,14 @@ loginAccount(config.name, config.wif, ['active'], function(err,account_data) {
         console.error('account failed to log in...', err);
         return process.exit();
     }
-    console.log('Successfully logged into user', account_data.name);
+    log('Successfully logged into user', account_data.name);
     console.log();
     if(shouldPublish) {
-        console.log('Publishing immediately, then every %s minute(s)',config.interval);
+        log('Publishing immediately, then every %s minute(s)',config.interval);
         main(account_data);
     } else {
-        console.log('Not publishing immediately');
-        console.log('If you want to update your price feed RIGHT NOW, use node app.js publishnow');
+        log('Not publishing immediately');
+        log('If you want to update your price feed RIGHT NOW, use node app.js publishnow');
     }
     console.log();
     // convert interval to minutes
