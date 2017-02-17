@@ -97,6 +97,7 @@ function publish_feed(rate, account_data) {
     try {
         var tr = new TransactionBuilder();
         var ex_data = rate.toFixed(3) + " SBD";
+        var quote = 1;
         if(config.peg) {
             var pcnt = ((1 - config['peg_multi']) * 100).toFixed(2)
             log('Pegging is enabled. Reducing price by '+pcnt+'% (set config.peg to false to disable)');
