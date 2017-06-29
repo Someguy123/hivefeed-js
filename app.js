@@ -11,8 +11,9 @@ var config = require('./config.json');
 var exchange = require('./lib/exchange');
 
 if(!('node' in config)) { config['node'] = 'wss://steemd.steemit.com/'; }
-if(!('peg' in config)) { config['peg'] = true; }
-if(!('peg_multi' in config)) { config['peg_multi'] = 0.88; }
+// disable peg by default. 0% peg (bias)
+if(!('peg' in config)) { config['peg'] = false; }
+if(!('peg_multi' in config)) { config['peg_multi'] = 1; }
 
 var options = {url: config['node']}
 var { TransactionBuilder, Login } = require('steemjs-lib');
