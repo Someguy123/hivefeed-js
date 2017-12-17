@@ -33,3 +33,23 @@ docker logs feed
 npm install
 npm start
 ```
+
+Configuration
+===========
+```
+{
+    "node": "wss://steemd.steemit.com/",
+    "name": "your steem name",
+    "wif": "your active private key",
+    "interval": 60,
+    "peg": false,
+    "peg_multi": 1
+}
+```
+
+- **node** - The URL of the steem node to use.
+- **name** - The name of the steem account that will publish the feed
+- **wif** - The active private key for the steem account
+- **interval** - The number of minutes between publishing the feed
+- **peg** - Set to true only if you want to adjust your price feed bias
+- **peg_multi** - If "peg" is set to true, then this will change the "quote" to 1 / peg_multi. If you set "peg_multi" to 2 it will show a 100% bias on your feed.
