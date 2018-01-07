@@ -10,7 +10,7 @@
 var config = require('./config.json');
 var exchange = require('./lib/exchange');
 
-if(!('node' in config)) { config['node'] = 'wss://steemd.steemit.com/'; }
+if(!('node' in config)) { config['node'] = 'wss://steemd.privex.io/'; }
 // disable peg by default. 0% peg (bias)
 if(!('peg' in config)) { config['peg'] = false; }
 if(!('peg_multi' in config)) { config['peg_multi'] = 1; }
