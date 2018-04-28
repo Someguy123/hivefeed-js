@@ -34,6 +34,18 @@ npm install
 npm start
 ```
 
+**Crontab**
+
+Due to reliability issues with SVK's SteemJS-Lib, it's recommended to use a cron to restart it every 2 hrs.
+
+    crontab -e
+
+For docker you can use the following
+
+```
+0 */2   *  *    *    docker restart steemfeed
+```
+
 Configuration
 ===========
 ```
