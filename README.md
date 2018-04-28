@@ -22,16 +22,29 @@ I recommend using Docker, however you can also use a locally installed copy of N
 
 ```
 docker build -t steemfeed-js .
-docker run -itd --rm --name feed steemfeed-js
+docker run -itd --rm --name steemfeed steemfeed-js
 
 # Check the status with docker logs
-docker logs feed
+docker logs steemfeed
 ```
 
 **Starting Via NodeJS (assuming you have v6 installed)**
 ```
 npm install
 npm start
+```
+
+**Easy update with Docker**
+
+To update the dockerised version simply do the following:
+
+```
+git pull
+docker build -t steemfeed-js .
+docker stop steemfeeddocker rm steemfeed
+docker run -itd --name=steemfeed steemfeed-js
+# You can also use this one-liner for the docker commands
+docker build -t steemfeed-js .; docker stop steemfeed; docker rm steemfeed; docker run -itd --name=steemfeed steemfeed-js
 ```
 
 **Crontab**
