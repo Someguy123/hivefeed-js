@@ -1,7 +1,7 @@
 {
   "name": "steemfeed-js",
-  "version": "1.0.0",
-  "description": "Steem Price Feed in JS using SteemValue API",
+  "version": "2.0.0",
+  "description": "Steem Price Feed in JS with automatic retry for down nodes",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +11,6 @@
   "license": "GPL-3.0",
   "dependencies": {
     "request": "^2.74.0",
-    "steemjs-lib": "^0.3.6"
+    "steem": "^0.6.4"
   }
 }

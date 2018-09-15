@@ -1,5 +1,7 @@
 {
     "name": "your steem name",
     "wif": "your active private key",
-    "interval": 60
+    "interval": 60,
+    "peg": false,
+    "peg_multi": 1.0
 }
