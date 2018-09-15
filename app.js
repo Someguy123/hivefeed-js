@@ -176,7 +176,7 @@ class SteemAcc {
 try {
     var accountmgr = new SteemAcc(config.name, config.wif);
 } catch(e) {
-    console.error('An serious error occurred while checking your account:', e);
+    console.error('A serious error occurred while checking your account:', e);
     process.exit(1);
 }
 
