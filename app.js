@@ -182,7 +182,7 @@ try {
 
 var shouldPublish = process.argv.length > 2 && process.argv[2] == "publishnow";
 
-var get_price = function(callback) {
+function get_price(callback) {
     exchange.get_pair('steem','usd', 
         (price) => callback(false, parseFloat(price))
     );
