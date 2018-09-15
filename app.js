@@ -4,7 +4,7 @@
  * Created by @Someguy213
  * https://github.com/someguy123
  * Released under GNU GPL 3.0
- * Requires Node v6.14.4
+ * Requires Node v8.11.4
  */
 
 var config = require('./config.json');
