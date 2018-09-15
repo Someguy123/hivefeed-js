@@ -2,7 +2,9 @@ Steem Feed JS
 ============
 
 This is a STEEM Price Feed for witnesses on the [STEEM Network](https://steem.io). It's
-written in Node.JS and uses SVK's [SteemJS-Lib](https://github.com/svk31/steemjs-lib).
+written in Node.JS and uses Steemit's [Steem-JS](https://github.com/steemit/steem-js).
+
+Recommended NodeJS version: v8.11.4
 
 Installation
 ========
@@ -16,7 +18,7 @@ cp config.example.json config.json
 nano config.json
 ```
 
-I recommend using Docker, however you can also use a locally installed copy of Node v6.
+I recommend using Docker, however you can also use a locally installed copy of Node v8.11.4.
 
 **Starting Via Docker**
 
@@ -28,7 +30,7 @@ docker run -itd --rm --name steemfeed steemfeed-js
 docker logs steemfeed
 ```
 
-**Starting Via NodeJS (assuming you have v6 installed)**
+**Starting Via NodeJS (assuming you have the correct version installed)**
 ```
 npm install
 npm start
@@ -41,15 +43,18 @@ To update the dockerised version simply do the following:
 ```
 git pull
 docker build -t steemfeed-js .
-docker stop steemfeeddocker rm steemfeed
+docker stop steemfeed
+docker rm steemfeed
 docker run -itd --name=steemfeed steemfeed-js
+######
 # You can also use this one-liner for the docker commands
+###
 docker build -t steemfeed-js .; docker stop steemfeed; docker rm steemfeed; docker run -itd --name=steemfeed steemfeed-js
 ```
 
 **Crontab**
 
-Due to reliability issues with SVK's SteemJS-Lib, it's recommended to use a cron to restart it every 2 hrs.
+As NodeJS is somewhat unreliable, it's recommended to use a cron to restart it every 2 hrs.
 
     crontab -e
 
@@ -63,7 +68,7 @@ Configuration
 ===========
 ```
 {
-    "node": "wss://steemd.steemit.com/",
+    "node": "https://steemd.privex.io/",
     "name": "your steem name",
     "wif": "your active private key",
     "interval": 60,
