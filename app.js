@@ -24,6 +24,13 @@ Bias: ${config.peg ? config.peg_multi : 'Disabled'}
 RPC Node: ${config.node}`)
 console.log('-------------')
 
+global.verbose = false;
+for(var t_arg of process.argv) {
+    if(t_arg == '-v') {
+        global.verbose = true;
+    }
+}
+
 steem.api.setOptions({ url: config['node'] });
 
 // used for re-trying failed promises
@@ -181,10 +188,11 @@ try {
 }
 
 var shouldPublish = process.argv.length > 2 && process.argv[2] == "publishnow";
+var dryRun = process.argv.length > 2 && process.argv[2] == "dry";
 
 function get_price(callback) {
     exchange.get_pair('steem','usd', 
-        (price) => callback(false, parseFloat(price))
+        (err, price) => callback(err, parseFloat(price))
     );
 }
 
@@ -195,7 +203,12 @@ function main() {
         }
         log('STEEM/USD is ', price.toFixed(3));
         log('Attempting to publish feed...')
-        accountmgr.publish_feed(price);
+        if(!dryRun) {
+            accountmgr.publish_feed(price);
+        } else {
+            console.log('Dry Run. Not actually publishing.')
+
+        }
     });
 }
 
@@ -204,7 +217,7 @@ accountmgr.login().then((user_data) => {
     var {username} = user_data;
     log(`Successfully logged into ${username}`);
     console.log();
-    if(shouldPublish) {
+    if(shouldPublish || dryRun) {
         log('Publishing immediately, then every %s minute(s)',config.interval);
         main();
     } else {
