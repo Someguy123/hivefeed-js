@@ -175,8 +175,8 @@ try {
     process.exit(1);
 }
 
-var shouldPublish = process.argv.length > 2 && process.argv[2] == "publishnow";
-var dryRun = process.argv.length > 2 && process.argv[2] == "dry";
+var shouldPublish = settings.shouldPublish;
+var dryRun = settings.dryRun;
 
 var cap_sym = config.ex_symbol.toUpperCase(), 
     cap_comp = config.ex_compare.toUpperCase();
@@ -207,7 +207,10 @@ accountmgr.login().then((user_data) => {
     var {username} = user_data;
     log(`Successfully logged into ${username}`);
     console.log();
-    if(shouldPublish || dryRun) {
+    if (settings.publishOnce) {
+        log('Argument "publishonce" passed. Publishing immediately, then exiting.');
+        return main();
+    } else if (shouldPublish || dryRun) {
         log('Publishing immediately, then every %s minute(s)',config.interval);
         main();
     } else {

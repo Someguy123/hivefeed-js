@@ -22,15 +22,34 @@ I recommend using Docker, however you can also use a locally installed copy of N
 
 **Starting Via Docker**
 
-```
-docker build -t steemfeed-js .
-docker run -itd --rm --name steemfeed steemfeed-js
+```sh
 
-# Check the status with docker logs
-docker logs steemfeed
+# If you don't have docker installed yet, you can easily install it using run.sh
+./run.sh install_docker
+
+# (Optional) To save a little time, you can use my binary docker image, instead of having
+# to build the container - which takes a few minutes (vs. a few seconds via binary install)
+./run.sh install
+
+# Now just start your feed :)
+./run.sh start
+
+# Check the logs / status to make sure it's working properly
+./run.sh logs       # Check the status with docker logs
+./run.sh status     # This will also help you check if it's running or not.
+
+# If you need to force update your feed at any point
+./run.sh publish
+
+# Other useful commands:
+./run.sh stop       # To stop the steemfeed-js container
+./run.sh restart    # To restart the steemfeed-js container (e.g. after config changes)
+./run.sh build      # If you don't want to / can't use my binary image, this will force build a new image locally.
+
 ```
 
 **Starting Via NodeJS (assuming you have the correct version installed)**
+
 ```
 npm install
 npm start
@@ -40,32 +59,27 @@ npm start
 
 To update the dockerised version simply do the following:
 
-```
+```sh
 git pull
-docker build -t steemfeed-js .
-docker stop steemfeed
-docker rm steemfeed
-docker run -itd --name=steemfeed steemfeed-js
-######
-# You can also use this one-liner for the docker commands
-###
-docker build -t steemfeed-js .; docker stop steemfeed; docker rm steemfeed; docker run -itd --name=steemfeed steemfeed-js
+./run.sh install
+./run.sh restart
 ```
 
 **Crontab**
 
-As NodeJS is somewhat unreliable, it's recommended to use a cron to restart it every 2 hrs.
+As NodeJS is somewhat unreliable, it's recommended to use a cron to restart it every 3 to 4 hrs.
 
     crontab -e
 
-For docker you can use the following
+For docker you can use the following (restarts every 4 hrs)
 
 ```
-0 */2   *  *    *    docker restart steemfeed
+0 */4   *  *    *    docker restart steemfeed
 ```
 
 Configuration
 ===========
+
 ```
 {
     "name": "your steem/hive name",
