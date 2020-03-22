@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  *
  * Node.JS pricefeed script for steem
@@ -7,22 +8,20 @@
  * Requires Node v8.11.4
  */
 
-var config = require('./config.json');
+var settings = require('./lib/settings');
 var exchange = require('./lib/exchange');
 var request = require('request');
 var steem = require('steem');
 
-if(!('node' in config)) { config['node'] = 'https://steemd.privex.io/'; }
-// disable peg by default. 0% peg (bias)
-if(!('peg' in config)) { config['peg'] = false; }
-if(!('peg_multi' in config)) { config['peg_multi'] = 1; }
+var config = settings.config,
+    retry_conf = settings.retry_conf;
 
-console.log('-------------')
+console.log('-------------');
 log(`Loaded configuration:
 Username: ${config.name}
 Bias: ${config.peg ? config.peg_multi : 'Disabled'}
-RPC Node: ${config.node}`)
-console.log('-------------')
+RPC Node: ${config.node}`);
+console.log('-------------');
 
 global.verbose = false;
 for(var t_arg of process.argv) {
@@ -31,22 +30,11 @@ for(var t_arg of process.argv) {
     }
 }
 
-steem.api.setOptions({ url: config['node'] });
+steem.api.setOptions({ url: config.node });
 
 // used for re-trying failed promises
 function delay(t) {
-    return new Promise((r_resolve) => {
-        setTimeout(r_resolve, t);
-    });
-}
-
-// Attempts = how many times to allow an RPC problem before giving up
-// Delay = how long before a retry
-var retry_conf = {
-    feed_attempts: 10,
-    feed_delay: 60,
-    login_attempts: 6,
-    login_delay: 10
+    return new Promise((r_resolve) => setTimeout(r_resolve, t) );
 }
 
 class SteemAcc {
@@ -90,9 +78,9 @@ class SteemAcc {
                     console.error('Most likely the RPC node is down.');
                     var msg = ('message' in err) ? err.message : err;
                     console.error('The error returned was:', msg);
-                    if(tries < retry_conf['login_attempts']) {
-                        console.error(`Will retry in ${retry_conf['login_delay']} seconds`);
-                        return delay(retry_conf['login_delay'] * 1000)
+                    if(tries < retry_conf.login_attempts) {
+                        console.error(`Will retry in ${retry_conf.login_delay} seconds`);
+                        return delay(retry_conf.login_delay * 1000)
                           .then(() => resolve(this.loadAccount(reload, tries+1)))
                           .catch((e) => reject(e));
                     }
@@ -116,7 +104,7 @@ class SteemAcc {
                 };
                 this.user_data = ud;
                 return resolve(ud);
-            })
+            });
         });
     }
 
@@ -143,16 +131,16 @@ class SteemAcc {
     publish_feed(rate, tries=0) {
         try {
             // var tr = new TransactionBuilder();
-            var ex_data = rate.toFixed(3) + " SBD";
+            var ex_data = rate.toFixed(3) + ` ${config.base_symbol}`;
             var quote = 1;
             if(config.peg) {
-                var pcnt = ((1 - config['peg_multi']) * 100).toFixed(2)
+                var pcnt = ((1 - config.peg_multi) * 100).toFixed(2);
                 log('Pegging is enabled. Reducing price by '+pcnt+'% (set config.peg to false to disable)');
                 log('Original price (pre-peg):', ex_data);
-                quote = 1 / config['peg_multi'];
+                quote = 1 / config.peg_multi;
             }
             
-            var exchangeRate = {base: ex_data, quote: quote.toFixed(3) + " STEEM"}
+            var exchangeRate = {base: ex_data, quote: quote.toFixed(3) + ` ${config.quote_symbol}`};
             var {username, active_wif} = this.user_data;
             steem.broadcast.feedPublish(active_wif, username, exchangeRate, 
                 (err, r) => {
@@ -160,18 +148,18 @@ class SteemAcc {
                         console.error('Failed to publish feed...');
                         var msg = ('message' in err) ? err.message : err;
                         console.error('reason:', msg);
-                        if(tries < retry_conf['feed_attempts']) {
-                            console.error(`Will retry in ${retry_conf['feed_delay']} seconds`);
-                            return delay(retry_conf['feed_delay'] * 1000)
+                        if(tries < retry_conf.feed_attempts) {
+                            console.error(`Will retry in ${retry_conf.feed_delay} seconds`);
+                            return delay(retry_conf.feed_delay * 1000)
                               .then(() => this.publish_feed(rate, tries+1))
                               .catch(console.error);
                         }
-                        console.error(`Giving up. Tried ${tries} times`)
+                        console.error(`Giving up. Tried ${tries} times`);
                         return reject(err);                 
                     }
-                    log('Data published at: ', ""+new Date())
+                    log('Data published at: ', ""+new Date());
                     log('Successfully published feed.');
-                    log(`TXID: ${r.id} TXNUM: ${r.trx_num}`)
+                    log(`TXID: ${r.id} TXNUM: ${r.trx_num}`);
                 });
         } catch(e) {
             console.error(e);
@@ -190,8 +178,11 @@ try {
 var shouldPublish = process.argv.length > 2 && process.argv[2] == "publishnow";
 var dryRun = process.argv.length > 2 && process.argv[2] == "dry";
 
+var cap_sym = config.ex_symbol.toUpperCase(), 
+    cap_comp = config.ex_compare.toUpperCase();
+
 function get_price(callback) {
-    exchange.get_pair('steem','usd', 
+    exchange.get_pair( config.ex_symbol, config.ex_compare,
         (err, price) => callback(err, parseFloat(price))
     );
 }
@@ -201,13 +192,12 @@ function main() {
         if(err) {
             return console.error('error loading prices, will retry later');
         }
-        log('STEEM/USD is ', price.toFixed(3));
-        log('Attempting to publish feed...')
+        log(`${cap_sym}/${cap_comp} is: ${price.toFixed(3)} ${cap_comp} per ${cap_sym}`);
+        log('Attempting to publish feed...');
         if(!dryRun) {
             accountmgr.publish_feed(price);
         } else {
-            console.log('Dry Run. Not actually publishing.')
-
+            console.log('Dry Run. Not actually publishing.');
         }
     });
 }
@@ -229,7 +219,7 @@ accountmgr.login().then((user_data) => {
     var interval = parseInt(config.interval) * 1000 * 60;
     setInterval(() => main(), interval);
 }).catch((e) => {
-    console.error(`An error occurred attempting to log into ${config.name}... Exiting`)
+    console.error(`An error occurred attempting to log into ${config.name}... Exiting`);
     console.error('Reason:', e);
     process.exit(1);
 });

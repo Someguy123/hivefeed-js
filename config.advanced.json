@@ -1,0 +1,42 @@
+{
+    "name": "your steem name",
+    "wif": "your active private key",
+    "interval": 60,
+    "peg": false,
+    "peg_multi": 1.0,
+    "node": "https://steemd.privex.io",
+    "ex_symbol": "steem",
+    "ex_compare": "usd",
+    "base_symbol": "SBD",
+    "quote_symbol": "STEEM",
+    "read_this_disable": [
+        "If an exchange is down, or has issues resulting in inaccurate prices,",
+        "then you can add exchanges to the disable_exchanges list, resulting in those ",
+        "exchanges never being used for any price data."
+    ],
+    "disable_exchanges": [
+        "poloniex", "ionomy"
+    ],
+    "exchanges_no_provide": {
+        "read_this": [
+            "The below example, disables the use of the BTC:STEEM pair for Poloniex.",
+            "This feature allows you to disable specific pairs per exchange, if they're",
+            "unstable, broken, or reporting bad data."
+        ],
+        "poloniex": [
+            ["btc", "steem"]
+        ]
+    },
+    "exchanges_provide": {
+        "read_this": [
+            "This feature allows you to enable additional pairs for existing exchanges, which",
+            "aren't enabled by default",
+            "The below example, would add the pairs BTC/DASH and USD/EOS to the 'pairs provided' list",
+            "of the Bittrex adapter."
+        ],
+        "bittrex": [
+            ["btc","dash"],
+            ["usd","eos"]
+        ]
+    }
+}

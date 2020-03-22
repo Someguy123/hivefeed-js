@@ -68,18 +68,105 @@ Configuration
 ===========
 ```
 {
-    "node": "https://steemd.privex.io/",
-    "name": "your steem name",
+    "name": "your steem/hive name",
     "wif": "your active private key",
+    "network": "steem",
     "interval": 60,
     "peg": false,
     "peg_multi": 1
 }
 ```
 
-- **node** - The URL of the steem node to use.
-- **name** - The name of the steem account that will publish the feed
-- **wif** - The active private key for the steem account
-- **interval** - The number of minutes between publishing the feed
-- **peg** - Set to true only if you want to adjust your price feed bias
-- **peg_multi** - If "peg" is set to true, then this will change the "quote" to 1 / peg_multi. If you set "peg_multi" to 2 it will show a 100% bias on your feed.
+- **name** (REQUIRED) - The name of the steem account that will publish the feed
+
+- **wif** (REQUIRED) - The active private key for the steem account
+
+- **node** (default: `https://api.steemit.com`) - The HTTP(S) URL of the steem node to use, e.g. `https://steemd.privex.io`
+
+- **interval** (default: `60`) - The number of minutes between publishing the feed
+
+- **network** (default: `steem`) - The network (chain) you're using this for. Options are: `steem` and `hive`
+
+- **peg** (default: `false`) - Set to true only if you want to adjust your price feed bias
+
+- **peg_multi** (default: `1`) - If "peg" is set to true, then this will change the "quote" to 1 / peg_multi. If you set "peg_multi" to 2 it will show a 100% bias on your feed.
+
+
+Advanced Configuration Options
+==============================
+
+**NOTE:** The settings `ex_symbol`, `ex_compare`, `base_symbol` and `quote_symbol` normally do not need to be adjusted.
+
+Just set the correct `network`, and those settings will be automatically updated to the correct values.
+
+
+`ex_symbol` - The symbol we're obtaining the price of. Default: `steem`
+
+`ex_compare` - The symbol we're pricing `ex_symbol` with (i.e. the other half of the exchange pair). Default: `usd`
+
+`base_symbol` - The symbol used for the `"base": "0.512 SBD"` part of the feed. Default: `SBD`
+
+`quote_symbol` - The symbol used for the `"quote": "1.000 STEEM"` part of the feed. Default: `STEEM`
+
+
+`disable_exchanges` - A list of exchange `code` 's to disable. Exchanges listed here will not be used
+directly (i.e. get price for A/B), nor indirectly (i.e. get price for A/D by converting A/C then C/D).
+
+Example (disable all exchanges...):
+
+```json
+{
+    "disable_exchanges": ["bittrex", "poloniex", "kraken", "ionomy", "binance"]
+}
+```
+
+`exchanges_no_provide` - Disable use of specific coin pairs per exchange, for example, you might want
+to temporarily ban the usage of STEEM/BTC from Poloniex.
+
+Example (block STEEM/BTC from poloniex, block BTC/USDT on Kraken):
+
+```json
+{
+    "exchanges_no_provide": {
+        "poloniex": [
+            ["steem", "btc"]
+        ],
+        "kraken": [
+            ["btc", "usdt"]
+        ]
+    },
+}
+```
+
+`exchanges_provide` - Add new coin pairs to exchanges, allowing the user to inform steemfeed-js of
+new pairs supported by a given exchange.
+
+By default, most exchange adapters have the following pairs enabled (if the exchange supports them):
+
+    - BTC/USD
+    - BTC/USDT
+    - USDT/USD
+    - STEEM/BTC
+    - HIVE/BTC
+    - STEEM/USD (preferred over STEEM/BTC)
+    - HIVE/USD (preferred over HIVE/BTC)
+
+Example (add BTC/DASH, EOS/USD, EOS/BTC to bittrex - add EOS/BTC to kraken):
+
+```json
+{
+    "exchanges_provide": {
+        "bittrex": [
+            ["btc","dash"],
+            ["eos","usd"],
+            ["eos","btc"]
+        ],
+        "kraken": [
+            ["eos", "btc"]
+        ]
+    }
+}
+```
+
+
+
