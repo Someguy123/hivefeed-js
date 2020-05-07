@@ -4,6 +4,8 @@
  * Node.JS pricefeed script for steem
  * Created by @Someguy213
  * https://github.com/someguy123
+ * Updated by @Rishi556
+ * https://github.com/rishi556
  * Released under GNU GPL 3.0
  * Requires Node v8.11.4
  */
