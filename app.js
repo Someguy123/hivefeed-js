@@ -48,7 +48,7 @@ class SteemAcc {
          * @throws {Error<string:msg>}   If private key is invalid
          */
         if(!steem.auth.isWif(config.wif)) {
-            throw new Error("The private key you specified is not valid. Be aware Steem private keys start with a 5.");
+            throw new Error('The private key you specified is not valid. Be aware Steem private keys start with a 5.');
         }
         this.user_data = {username, active_wif};
         this.wif_valid = null;
@@ -65,7 +65,7 @@ class SteemAcc {
          */
         var {user_data} = this;
         var {username} = user_data;
-        log('Loading account data for', username);
+        log(`Loading account data for ${username}`);
         // If we already have the account loaded, and no refresh was requested
         // just use the cache.
         if(('auths' in user_data) && !reload) {
@@ -76,7 +76,7 @@ class SteemAcc {
         return new Promise((resolve, reject) => {
             steem.api.getAccounts([username], (err, res) => {
                 if(err) {
-                    console.error('A problem occurred while locating the account', username);
+                    console.error(`A problem occurred while locating the account ${username}`);
                     console.error('Most likely the RPC node is down.');
                     var msg = ('message' in err) ? err.message : err;
                     console.error('The error returned was:', msg);
@@ -137,8 +137,8 @@ class SteemAcc {
             var quote = 1;
             if(config.peg) {
                 var pcnt = ((1 - config.peg_multi) * 100).toFixed(2);
-                log('Pegging is enabled. Reducing price by '+pcnt+'% (set config.peg to false to disable)');
-                log('Original price (pre-peg):', ex_data);
+                log(`Pegging is enabled. Reducing price by ${pcnt}% (set config.peg to false to disable)`);
+                log(`Original price (pre-peg): ${ex_data}`);
                 quote = 1 / config.peg_multi;
             }
             
@@ -149,7 +149,7 @@ class SteemAcc {
                     if(err) {
                         console.error('Failed to publish feed...');
                         var msg = ('message' in err) ? err.message : err;
-                        console.error('reason:', msg);
+                        console.error(`reason: ${msg}`);
                         if(tries < retry_conf.feed_attempts) {
                             console.error(`Will retry in ${retry_conf.feed_delay} seconds`);
                             return delay(retry_conf.feed_delay * 1000)
@@ -159,7 +159,7 @@ class SteemAcc {
                         console.error(`Giving up. Tried ${tries} times`);
                         return reject(err);                 
                     }
-                    log('Data published at: ', ""+new Date());
+                    log(`Data published at: ${new Date()}`); //Not cure if this one will work
                     log('Successfully published feed.');
                     log(`TXID: ${r.id} TXNUM: ${r.trx_num}`);
                 });
@@ -173,7 +173,7 @@ class SteemAcc {
 try {
     var accountmgr = new SteemAcc(config.name, config.wif);
 } catch(e) {
-    console.error('A serious error occurred while checking your account:', e);
+    console.error(`A serious error occurred while checking your account: ${e}`);
     process.exit(1);
 }
 
@@ -213,7 +213,7 @@ accountmgr.login().then((user_data) => {
         log('Argument "publishonce" passed. Publishing immediately, then exiting.');
         return main();
     } else if (shouldPublish || dryRun) {
-        log('Publishing immediately, then every %s minute(s)',config.interval);
+        log(`Publishing immediately, then every %s minute(s) ${conifg.interval}`);
         main();
     } else {
         log('Not publishing immediately');
@@ -225,7 +225,7 @@ accountmgr.login().then((user_data) => {
     setInterval(() => main(), interval);
 }).catch((e) => {
     console.error(`An error occurred attempting to log into ${config.name}... Exiting`);
-    console.error('Reason:', e);
+    console.error(`Reason: ${e}`, e);
     process.exit(1);
 });
 
