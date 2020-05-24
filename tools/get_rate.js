@@ -15,8 +15,8 @@
 var exchange = require('../lib/exchange');
 
 var args_processed = 0, 
-    pair_base = "steem", 
-    pair_quote = "usd", 
+    pair_base = 'steem', 
+    pair_quote = 'usd', 
     pair_exchange = null;
 
 
@@ -40,7 +40,7 @@ if (pair_exchange == null) {
     exchange.get_pair(
         pair_base, pair_quote, (err, price) => {
             if(err) {
-                console.error("get_pair returned an error: " + err.toString());
+                console.error(`get_pair returned an error: ${err.toString()}`);
                 return console.error('error loading prices, please retry later');
             }
             console.log(`${pb}/${pq} is ${price.toFixed(6)} ${pq} per 1 ${pb}`);
@@ -62,7 +62,7 @@ if (pair_exchange == null) {
 
     adapter.get_pair(pair_base, pair_quote, (err, price) => {
         if(err) {
-            console.error("get_pair returned an error: " + err.toString());
+            console.error(`get_pair returned an error: ${err.toString()}`);
             return console.error('error loading prices, please retry later');
         }
         console.log(`Using specific exchange ${pair_exchange} for price:`);
