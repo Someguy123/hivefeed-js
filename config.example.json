@@ -4,6 +4,7 @@
     "network": "steem",
     
     "interval": 60,
+    
     "peg": false,
     "peg_multi": 1.0,
     
