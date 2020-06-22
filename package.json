@@ -11,6 +11,8 @@
   "author": "Chris <info@someguy123.com> (Someguy123)",
   "license": "GPL-3.0",
   "dependencies": {
+    "@aksel/structjs": "^1.0.0",
+    "@hiveio/hive-js": "^0.8.0",
     "request": "^2.74.0",
     "steem": "^0.6.4"
   }

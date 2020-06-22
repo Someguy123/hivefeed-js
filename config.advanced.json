@@ -4,7 +4,11 @@
     "interval": 60,
     "peg": false,
     "peg_multi": 1.0,
-    "node": "https://steemd.privex.io",
+    "nodes": [
+        "https://hived.privex.io",
+        "https://hived.hive-engine.com",
+        "https://anyx.io"
+    ],
     "ex_symbol": "steem",
     "ex_compare": "usd",
     "base_symbol": "SBD",
