@@ -213,7 +213,7 @@ accountmgr.login().then((user_data) => {
         log('Argument "publishonce" passed. Publishing immediately, then exiting.');
         return main();
     } else if (shouldPublish || dryRun) {
-        log(`Publishing immediately, then every %s minute(s) ${conifg.interval}`);
+        log(`Publishing immediately, then every %s minute(s) ${config.interval}`);
         main();
     } else {
         log('Not publishing immediately');
