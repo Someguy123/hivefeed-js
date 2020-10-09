@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  *
- * Node.JS pricefeed script for steem
+ * Node.JS pricefeed script for hive
  * Created by @Someguy213
  * https://github.com/someguy123
  * Updated by @Rishi556
@@ -13,7 +13,7 @@
 var settings = require('./lib/settings');
 var exchange = require('./lib/exchange');
 var request = require('request');
-var steem = require('steem');
+var steem = require('@hiveio/hive-js');
 
 var config = settings.config,
     retry_conf = settings.retry_conf;
@@ -48,7 +48,7 @@ class SteemAcc {
          * @throws {Error<string:msg>}   If private key is invalid
          */
         if(!steem.auth.isWif(config.wif)) {
-            throw new Error('The private key you specified is not valid. Be aware Steem private keys start with a 5.');
+            throw new Error('The private key you specified is not valid. Be aware Hive private keys start with a 5.');
         }
         this.user_data = {username, active_wif};
         this.wif_valid = null;

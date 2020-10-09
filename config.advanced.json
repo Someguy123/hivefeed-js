@@ -1,14 +1,14 @@
 {
-    "name": "your steem name",
+    "name": "your hive name",
     "wif": "your active private key",
     "interval": 60,
     "peg": false,
     "peg_multi": 1.0,
-    "node": "https://steemd.privex.io",
-    "ex_symbol": "steem",
+    "node": "https://hivded.privex.io",
+    "ex_symbol": "hive",
     "ex_compare": "usd",
-    "base_symbol": "SBD",
-    "quote_symbol": "STEEM",
+    "base_symbol": "HBD",
+    "quote_symbol": "HIVE",
     "read_this_disable": [
         "If an exchange is down, or has issues resulting in inaccurate prices,",
         "then you can add exchanges to the disable_exchanges list, resulting in those ",
@@ -19,12 +19,12 @@
     ],
     "exchanges_no_provide": {
         "read_this": [
-            "The below example, disables the use of the BTC:STEEM pair for Poloniex.",
+            "The below example, disables the use of the BTC:HIVE pair for Poloniex.",
             "This feature allows you to disable specific pairs per exchange, if they're",
             "unstable, broken, or reporting bad data."
         ],
         "poloniex": [
-            ["btc", "steem"]
+            ["btc", "hive"]
         ]
     },
     "exchanges_provide": {

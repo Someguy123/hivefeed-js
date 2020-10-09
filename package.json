@@ -11,7 +11,7 @@
   "author": "Chris <info@someguy123.com> (Someguy123)",
   "license": "GPL-3.0",
   "dependencies": {
-    "request": "^2.74.0",
-    "steem": "^0.6.4"
+    "@hiveio/hive-js": "^0.8.5",
+    "request": "^2.74.0"
   }
 }
