@@ -5,7 +5,7 @@
  * coin pair.
  * 
  * Usage:
- *      # With no arguments, gets the STEEM/USD exchange rate
+ *      # With no arguments, gets the HIVE/USD exchange rate
  *      ./tools/get_rate.js
  *      ./tools/get_rate.js -v
  *      # Get the HIVE/USD exchange rate via any exchange possible (including via proxy rates)
@@ -15,7 +15,7 @@
 var exchange = require('../lib/exchange');
 
 var args_processed = 0, 
-    pair_base = 'steem', 
+    pair_base = 'hive', 
     pair_quote = 'usd', 
     pair_exchange = null;
 

@@ -1,14 +1,14 @@
 {
-    "name": "your steem name",
-    "wif": "your active private key",
-    "network": "steem",
-    
-    "interval": 60,
-    
-    "peg": false,
-    "peg_multi": 1.0,
-    
-    "disable_exchanges": [],
-    "exchanges_no_provide": {},
-    "exchanges_provide": {}
+  "name": "your hive name",
+  "wif": "your active private key",
+  "network": "hive",
+  
+  "interval": 60,
+  
+  "peg": false,
+  "peg_multi": 1.0,
+  
+  "disable_exchanges": [],
+  "exchanges_no_provide": {},
+  "exchanges_provide": {}
 }
