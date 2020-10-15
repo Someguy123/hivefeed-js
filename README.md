@@ -1,10 +1,10 @@
-Steem Feed JS
+Hive Feed JS
 ============
 
-This is a STEEM Price Feed for witnesses on the [STEEM Network](https://steem.io). It's
-written in Node.JS and uses Steemit's [Steem-JS](https://github.com/steemit/steem-js).
+This is a Hive Price Feed for witnesses on the [HIVE Network](https://hive.io). It's
+written in Node.JS and uses Hive's [Hive-JS](https://www.npmjs.com/package/@hiveio/hive-js).
 
-Recommended NodeJS version: v8.11.4
+Recommended NodeJS version: v12.19.0
 
 Installation
 ========
@@ -82,24 +82,24 @@ Configuration
 
 ```
 {
-    "name": "your steem/hive name",
+    "name": "your hive name",
     "wif": "your active private key",
-    "network": "steem",
+    "network": "hive",
     "interval": 60,
     "peg": false,
     "peg_multi": 1
 }
 ```
 
-- **name** (REQUIRED) - The name of the steem account that will publish the feed
+- **name** (REQUIRED) - The name of the hive account that will publish the feed
 
 - **wif** (REQUIRED) - The active private key for the steem account
 
-- **node** (default: `https://api.steemit.com`) - The HTTP(S) URL of the steem node to use, e.g. `https://steemd.privex.io`
+- **node** (default: `https://hived.privex.io`) - The HTTP(S) URL of the steem node to use, e.g. `https://hived.privex.io`
 
 - **interval** (default: `60`) - The number of minutes between publishing the feed
 
-- **network** (default: `steem`) - The network (chain) you're using this for. Options are: `steem` and `hive`
+- **network** (default: `hive`) - The network (chain) you're using this for. Options are: `hive`
 
 - **peg** (default: `false`) - Set to true only if you want to adjust your price feed bias
 
@@ -114,13 +114,13 @@ Advanced Configuration Options
 Just set the correct `network`, and those settings will be automatically updated to the correct values.
 
 
-`ex_symbol` - The symbol we're obtaining the price of. Default: `steem`
+`ex_symbol` - The symbol we're obtaining the price of. Default: `hive`
 
 `ex_compare` - The symbol we're pricing `ex_symbol` with (i.e. the other half of the exchange pair). Default: `usd`
 
-`base_symbol` - The symbol used for the `"base": "0.512 SBD"` part of the feed. Default: `SBD`
+`base_symbol` - The symbol used for the `"base": "0.512 HBD"` part of the feed. Default: `HBD`
 
-`quote_symbol` - The symbol used for the `"quote": "1.000 STEEM"` part of the feed. Default: `STEEM`
+`quote_symbol` - The symbol used for the `"quote": "1.000 HIVE"` part of the feed. Default: `HIVE`
 
 
 `disable_exchanges` - A list of exchange `code` 's to disable. Exchanges listed here will not be used
@@ -135,15 +135,15 @@ Example (disable all exchanges...):
 ```
 
 `exchanges_no_provide` - Disable use of specific coin pairs per exchange, for example, you might want
-to temporarily ban the usage of STEEM/BTC from Poloniex.
+to temporarily ban the usage of HIVE/BTC from Poloniex.
 
-Example (block STEEM/BTC from poloniex, block BTC/USDT on Kraken):
+Example (block HIVE/BTC from poloniex, block BTC/USDT on Kraken):
 
 ```json
 {
     "exchanges_no_provide": {
         "poloniex": [
-            ["steem", "btc"]
+            ["hive", "btc"]
         ],
         "kraken": [
             ["btc", "usdt"]
@@ -160,9 +160,7 @@ By default, most exchange adapters have the following pairs enabled (if the exch
     - BTC/USD
     - BTC/USDT
     - USDT/USD
-    - STEEM/BTC
     - HIVE/BTC
-    - STEEM/USD (preferred over STEEM/BTC)
     - HIVE/USD (preferred over HIVE/BTC)
 
 Example (add BTC/DASH, EOS/USD, EOS/BTC to bittrex - add EOS/BTC to kraken):
