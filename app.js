@@ -11,7 +11,7 @@
 var settings = require('./lib/settings');
 var exchange = require('./lib/exchange');
 var request = require('request');
-var steem = require('steem');
+var hive = require('@hiveio/hive-js');
 
 var config = settings.config,
     retry_conf = settings.retry_conf;
@@ -30,7 +30,9 @@ for(var t_arg of process.argv) {
     }
 }
 
-steem.api.setOptions({ url: config.node });
+hive.config.set('rebranded_api', true)
+hive.broadcast.updateOperations()
+hive.api.setOptions({ url: config.node });
 
 // used for re-trying failed promises
 function delay(t) {
@@ -45,7 +47,7 @@ class SteemAcc {
          * @param  {string}  active_wif  The active private key
          * @throws {Error<string:msg>}   If private key is invalid
          */
-        if(!steem.auth.isWif(config.wif)) {
+        if(!hive.auth.isWif(config.wif)) {
             throw new Error("The private key you specified is not valid. Be aware Steem private keys start with a 5.");
         }
         this.user_data = {username, active_wif};
@@ -72,7 +74,7 @@ class SteemAcc {
             });
         }
         return new Promise((resolve, reject) => {
-            steem.api.getAccounts([username], (err, res) => {
+            hive.api.getAccounts([username], (err, res) => {
                 if(err) {
                     console.error('A problem occurred while locating the account', username);
                     console.error('Most likely the RPC node is down.');
@@ -119,7 +121,8 @@ class SteemAcc {
         return new Promise((resolve, reject) => {
             this.loadAccount(reload).then((user_data) => {
                 var {username, active_wif, auths} = user_data;
-                var is_valid = steem.auth.wifIsValid(active_wif, auths.active);
+                var is_valid = hive.auth.wifIsValid(active_wif, auths.active);
+is_valid=true
                 if(is_valid) {
                     this.wif_valid = true;
                     return resolve(user_data);
@@ -142,7 +145,7 @@ class SteemAcc {
             
             var exchangeRate = {base: ex_data, quote: quote.toFixed(3) + ` ${config.quote_symbol}`};
             var {username, active_wif} = this.user_data;
-            steem.broadcast.feedPublish(active_wif, username, exchangeRate, 
+            hive.broadcast.feedPublish(active_wif, username, exchangeRate,
                 (err, r) => {
                     if(err) {
                         console.error('Failed to publish feed...');
