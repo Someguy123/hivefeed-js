@@ -12,8 +12,8 @@ Installation
 First, download the git repository, then edit `config.json` as needed. The interval is in minutes.
 
 ```
-git clone https://github.com/Someguy123/steemfeed-js.git
-cd steemfeed-js
+git clone https://github.com/Someguy123/hivefeed-js.git
+cd hivefeed-js
 cp config.example.json config.json
 nano config.json
 ```
@@ -42,8 +42,8 @@ I recommend using Docker, however you can also use a locally installed copy of N
 ./run.sh publish
 
 # Other useful commands:
-./run.sh stop       # To stop the steemfeed-js container
-./run.sh restart    # To restart the steemfeed-js container (e.g. after config changes)
+./run.sh stop       # To stop the hivefeed-js container
+./run.sh restart    # To restart the hivefeed-js container (e.g. after config changes)
 ./run.sh build      # If you don't want to / can't use my binary image, this will force build a new image locally.
 
 ```
@@ -74,7 +74,7 @@ As NodeJS is somewhat unreliable, it's recommended to use a cron to restart it e
 For docker you can use the following (restarts every 4 hrs)
 
 ```
-0 */4   *  *    *    docker restart steemfeed
+0 */4   *  *    *    docker restart hivefeed
 ```
 
 Configuration
@@ -93,9 +93,9 @@ Configuration
 
 - **name** (REQUIRED) - The name of the hive account that will publish the feed
 
-- **wif** (REQUIRED) - The active private key for the steem account
+- **wif** (REQUIRED) - The active private key for the hive account
 
-- **node** (default: `https://hived.privex.io`) - The HTTP(S) URL of the steem node to use, e.g. `https://hived.privex.io`
+- **node** (default: `https://hived.privex.io`) - The HTTP(S) URL of the hive node to use, e.g. `https://hived.privex.io`
 
 - **interval** (default: `60`) - The number of minutes between publishing the feed
 
@@ -152,7 +152,7 @@ Example (block HIVE/BTC from poloniex, block BTC/USDT on Kraken):
 }
 ```
 
-`exchanges_provide` - Add new coin pairs to exchanges, allowing the user to inform steemfeed-js of
+`exchanges_provide` - Add new coin pairs to exchanges, allowing the user to inform hivefeed-js of
 new pairs supported by a given exchange.
 
 By default, most exchange adapters have the following pairs enabled (if the exchange supports them):

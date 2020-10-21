@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #####################################################################################################
-# Steemfeed-JS manager
+# Hivefeed-JS manager
 # Released under GNU GPL v3 by Someguy123
 #
-# Github: https://github.com/Someguy123/steemfeed-js
+# Github: https://github.com/Someguy123/hivefeed-js
 #
 # For more information, see README.md - or run `./run.sh help`
 #
@@ -15,9 +15,9 @@ cd "$SFJS_DIR"
 [[ -f "${SFJS_DIR}/.env" ]] && source "${SFJS_DIR}/.env"
 
 
-: ${DOCKER_NAME="steemfeed"}
-: ${DOCKER_IMAGE="steemfeed-js"}
-: ${DK_TAG="someguy123/steemfeed-js"}
+: ${DOCKER_NAME="hivefeed"}
+: ${DOCKER_IMAGE="hivefeed-js"}
+: ${DK_TAG="someguy123/hivefeed-js"}
 
 # Amount of time in seconds to allow the docker container to stop before killing it.
 # Default: 30 seconds
@@ -75,7 +75,7 @@ build() {
     fi
 
     msg bold green " -> Building container '${DOCKER_IMAGE}'..."
-    docker build -t steemfeed-js .
+    docker build -t hivefeed-js .
 }
 
 # Usage: ./run.sh install_docker
@@ -94,23 +94,16 @@ install_docker() {
 }
 
 # Usage: ./run.sh install [tag]
-# Downloads the Steem low memory node image from someguy123's official builds, or a custom tag if supplied
-#
-#   tag - optionally specify a docker tag to install from. can be third party
-#         format: user/repo:version    or   user/repo   (uses the 'latest' tag)
-#
-# If no tag specified, it will download the pre-set $DK_TAG in run.sh or .env
-# Default tag is normally someguy123/steem:latest (official builds by the creator of steem-docker).
 #
 install() {
     if (( $# == 1 )); then
         DK_TAG=$1
         # If neither '/' nor ':' are present in the tag, then for convenience, assume that the user wants
-        # someguy123/steemfeed-js with this specific tag.
+        # someguy123/hivefeed-js with this specific tag.
         if grep -qv ':' <<< "$1"; then
             if grep -qv '/' <<< "$1"; then
                 msg bold red "WARNING: Neither / nor : were present in your tag '$1'"
-                DK_TAG="someguy123/steemfeed-js:$1"
+                DK_TAG="someguy123/hivefeed-js:$1"
                 msg red "We're assuming you've entered a version, and will try to install @someguy123's image: '${DK_TAG}'"
                 msg yellow "If you *really* specifically want '$1' from Docker hub, set DK_TAG='$1' inside of .env and run './run.sh install'"
             fi
@@ -155,7 +148,7 @@ _ct_kill() {
 }
 
 # Usage: ./run.sh stop
-# Stops the steemfeed-js container, and removes the container to avoid any leftover
+# Stops the hivefeed-js container, and removes the container to avoid any leftover
 # configuration
 stop() { _ct_stop; _ct_remove; }
 
@@ -178,7 +171,7 @@ shell() {
         build
     fi
     msg bold green "\n -> Starting shell '/bin/sh' in auto-removing container using image '${DOCKER_IMAGE}'...\n"
-    docker run --rm -v "${SFJS_DIR}/config.json":/opt/steemfeed/config.json -it "$DOCKER_IMAGE" /bin/sh
+    docker run --rm -v "${SFJS_DIR}/config.json":/opt/hivefeed/config.json -it "$DOCKER_IMAGE" /bin/sh
     msg bold green "\n\n -> /bin/sh session terminated. Container should have been automatically cleaned up.\n"
 }
 
@@ -192,7 +185,7 @@ start() {
     if ct_exists; then
         if ct_running; then
             msg red "Container ${DOCKER_NAME} is still running! Aborting."
-            msg red "If you want to restart steemfeed-js, use: ./run.sh restart"
+            msg red "If you want to restart hivefeed-js, use: ./run.sh restart"
             return 1
         fi
         msg yellow "Container ${DOCKER_NAME} exists. Deleting and re-creating container to be safe..."
@@ -201,7 +194,7 @@ start() {
         msg green "Container ${DOCKER_NAME} doesn't exist yet, generating container..."
     fi
 
-    docker run --name "${DOCKER_NAME}" -v "${SFJS_DIR}/config.json":/opt/steemfeed/config.json -dt "$DOCKER_IMAGE"
+    docker run --name "${DOCKER_NAME}" -v "${SFJS_DIR}/config.json":/opt/hivefeed/config.json -dt "$DOCKER_IMAGE"
 
 }
 
@@ -213,7 +206,7 @@ publish() {
 
     msg bold green " -> You've requested a one-time feed publish"
     msg bold green " -> Starting container 'feed-publishone' (container will be auto-deleted after publishing)"
-    docker run --rm --name "feed-publishone" -v "${SFJS_DIR}/config.json":/opt/steemfeed/config.json -it "$DOCKER_IMAGE" ./app.js publishonce
+    docker run --rm --name "feed-publishone" -v "${SFJS_DIR}/config.json":/opt/hivefeed/config.json -it "$DOCKER_IMAGE" ./app.js publishonce
     msg bold green " -> Finished running 'publishonce'"
 }
 
@@ -248,18 +241,18 @@ status() {
 publish_img() {
     if (( $# < 1 )); then
         msg green "Usage: $0 publish_img [version] (extratag def: latest)"
-        msg yellow "Environment vars:\n\tMAIN_TAG - Override the primary tag (default: someguy123/steemfeed-js:\$V)\n"
+        msg yellow "Environment vars:\n\tMAIN_TAG - Override the primary tag (default: someguy123/hivefeed-js:\$V)\n"
         return 1
     fi
 
     V="$1"
-    : ${MAIN_TAG="someguy123/steemfeed-js:$V"}
+    : ${MAIN_TAG="someguy123/hivefeed-js:$V"}
     SECTAG="latest"
     (( $# > 2 )) && SECTAG="$3"
     if [[ "$SECTAG" == "n/a" ]]; then
         msg bold yellow  " >> Will build tag $V as tags $MAIN_TAG (no second tag)"
     else
-        SECOND_TAG="someguy123/steemfeed-js:$SECTAG"
+        SECOND_TAG="someguy123/hivefeed-js:$SECTAG"
         msg bold yellow " >> Will build tag $V as tags $MAIN_TAG and $SECOND_TAG"
     fi
     sleep 5
@@ -276,24 +269,24 @@ help() {
     echo "Usage: $0 COMMAND [DATA]"
     echo
     echo "Commands: 
-    start           - starts steemfeed-js container (automatically builds container if it doesn't exist)
-    stop            - stops and removes steemfeed-js container
-    kill            - force stop steemfeed-js container (in event of steemfeed-js hanging indefinitely)
-    restart         - restarts steemfeed-js container
-    status          - show status of steemfeed-js container
+    start           - starts hivefeed-js container (automatically builds container if it doesn't exist)
+    stop            - stops and removes hivefeed-js container
+    kill            - force stop hivefeed-js container (in event of hivefeed-js hanging indefinitely)
+    restart         - restarts hivefeed-js container
+    status          - show status of hivefeed-js container
 
     publish         - publish a new feed immediately, then stop/remove the container (no automatic publishing at a regular interval)
                       aliases:  once, onetime, oneshot, publishonce, publish_once 
 
     install         - pulls latest docker image from server (no compiling)
     install_docker  - install docker
-    rebuild         - removes any existing image, builds steemfeed-js image (from docker file), and then restarts it
-    build           - only builds steemfeed-js image (from docker file)
+    rebuild         - removes any existing image, builds hivefeed-js image (from docker file), and then restarts it
+    build           - only builds hivefeed-js image (from docker file)
     
-    logs            - show all logs inc. docker logs, and steemfeed-js logs
+    logs            - show all logs inc. docker logs, and hivefeed-js logs
 
     enter           - enter a bash session in the currently running container
-    shell           - launch the steem container with appropriate mounts, then open bash for inspection
+    shell           - launch the hive container with appropriate mounts, then open bash for inspection
     "
     echo
     exit
