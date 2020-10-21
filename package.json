@@ -1,8 +1,8 @@
 {
-  "name": "steemfeed-js",
-  "version": "3.3.0",
-  "description": "Steem Price Feed in JS with automatic retry for down nodes",
-  "repository": "https://github.com/someguy123/steemfeed-js",
+  "name": "hivefeed-js",
+  "version": "4.0.0",
+  "description": "Hive Price Feed in JS with automatic retry for down nodes",
+  "repository": "https://github.com/someguy123/hivefeed-js",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
