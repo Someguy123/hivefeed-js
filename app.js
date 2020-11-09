@@ -21,7 +21,8 @@ console.log('-------------');
 log(`Loaded configuration:
 Username: ${config.name}
 Bias: ${config.peg ? config.peg_multi : 'Disabled'}
-RPC Node: ${config.node}`);
+RPC Node: ${config.node}
+Alternate Nodes: ${config.alternate_nodes.join(", ")}`);
 console.log('-------------');
 
 global.verbose = false;
@@ -80,6 +81,7 @@ class HiveAcc {
                     var msg = ('message' in err) ? err.message : err;
                     console.error('The error returned was:', msg);
                     if(tries < retry_conf.login_attempts) {
+                        switchNode()
                         console.error(`Will retry in ${retry_conf.login_delay} seconds`);
                         return delay(retry_conf.login_delay * 1000)
                           .then(() => resolve(this.loadAccount(reload, tries+1)))
@@ -150,6 +152,7 @@ class HiveAcc {
                         var msg = ('message' in err) ? err.message : err;
                         console.error(`reason: ${msg}`);
                         if(tries < retry_conf.feed_attempts) {
+                            switchNode()
                             console.error(`Will retry in ${retry_conf.feed_delay} seconds`);
                             return delay(retry_conf.feed_delay * 1000)
                               .then(() => this.publish_feed(rate, tries+1))
@@ -201,6 +204,13 @@ function main() {
             console.log('Dry Run. Not actually publishing.');
         }
     });
+}
+
+function switchNode(){
+    let currentNode = config.alternate_nodes.shift()
+    hive.api.setOptions({ url: currentNode })
+    config.alternate_nodes.push(currentNode)
+    console.log(`Switched node to ${currentNode}.`)
 }
 
 log('Attempting to login into account', config.name);
