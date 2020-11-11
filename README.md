@@ -122,6 +122,8 @@ Just set the correct `network`, and those settings will be automatically updated
 
 `quote_symbol` - The symbol used for the `"quote": "1.000 HIVE"` part of the feed. Default: `HIVE`
 
+`alternate_nodes` - Alternate nodes to use if the main provided one is down. Provided as an array of nodes. Default : `["https://api.hive.blog", "https://api.deathwing.me"]`
+
 
 `disable_exchanges` - A list of exchange `code` 's to disable. Exchanges listed here will not be used
 directly (i.e. get price for A/B), nor indirectly (i.e. get price for A/D by converting A/C then C/D).
