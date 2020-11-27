@@ -55,6 +55,8 @@ npm install
 npm start
 ```
 
+Full explanation for usage with nodejs: https://peakd.com/witness/@rishi556/how-to-setup-hive-witness-pricefeed-using-hivefeed-js
+
 **Easy update with Docker**
 
 To update the dockerised version simply do the following:
