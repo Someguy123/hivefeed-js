@@ -1,6 +1,9 @@
 {
     "name": "your hive name",
     "wif": "your active private key",
+    "signing_keys" : {
+        "public signing key" : "private signign key"
+    },
     "interval": 60,
     "peg": false,
     "peg_multi": 1.0,
