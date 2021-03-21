@@ -226,7 +226,7 @@ class HiveAcc {
                         if (signing_keys.hasOwnProperty(signing)) {
                             let props = {
                                 "key": signing,
-                                "hbd_exchange_rate": {"base": exchangeRate.base, "quote": exchangeRate.quote}
+                                "hbd_exchange_rate": exchangeRate
                             };
                             let op = hive.utils.buildWitnessUpdateOp(username, props);
                             hive.broadcast.witnessSetProperties(signing_keys[signing], username, op[1].props, [], (err, result) => {
@@ -343,27 +343,38 @@ function switchNode() {
 }
 
 log('Attempting to login into account', config.name);
-accountmgr.login().then((user_data) => {
-    var {username} = user_data;
-    log(`Successfully logged into ${username}`);
-    console.log();
-    if (settings.publishOnce) {
-        log('Argument "publishonce" passed. Publishing immediately, then exiting.');
-        return main();
-    } else if (shouldPublish || dryRun) {
-        log(`Publishing immediately, then every ${config.interval} minute(s) `);
-        main();
-    } else {
-        log('Not publishing immediately');
-        log('If you want to update your price feed RIGHT NOW, use node app.js publishnow');
-    }
-    console.log();
-    // convert interval from minutes to ms
-    var interval = parseInt(config.interval) * 1000 * 60;
-    setInterval(() => main(), interval);
-}).catch((e) => {
-    console.error(`An error occurred attempting to log into ${config.name}... Exiting`);
-    console.error(`Reason: ${e}`, e);
-    process.exit(1);
-});
 
+function startup(){
+    accountmgr.login().then((user_data) => {
+        var {username} = user_data;
+        log(`Successfully logged into ${username}`);
+        if (settings.publishOnce) {
+            log('Argument "publishonce" passed. Publishing immediately, then exiting.');
+            return main();
+        } else if (shouldPublish || dryRun) {
+            log(`Publishing immediately, then every ${config.interval} minute(s) `);
+            main();
+        } else {
+            log('Not publishing immediately');
+            log('If you want to update your price feed RIGHT NOW, use node app.js publishnow');
+        }
+        console.log();
+        // convert interval from minutes to ms
+        var interval = parseInt(config.interval) * 1000 * 60;
+        setInterval(() => main(), interval);
+    }).catch((e) => {
+        console.error(`An error occurred attempting to log into ${config.name}...`);
+        console.error(`Reason: ${e}`, e);
+        if (!Object.keys(config.signing_keys).length){
+            console.error("Exiting");
+            process.exit(1);
+        } else {
+            console.log(`Trying again in ${config.interval} minute(s)`);
+            setTimeout(() => {
+                startup();
+            }, 1000 * 60 * config.interval);
+        }
+    });
+}
+
+startup();
