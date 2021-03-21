@@ -257,7 +257,7 @@ class HiveAcc {
                         }
                     }
                 );
-            } else {
+            } else if (this.wif_valid) {
                 hive.broadcast.feedPublish(active_wif, username, exchangeRate,
                     (err, r) => {
                         if (err) {
@@ -278,6 +278,20 @@ class HiveAcc {
                         log('Successfully published feed.');
                         log(`TXID: ${r.id} TXNUM: ${r.trx_num}`);
                     });
+            } else {
+                console.error('Failed to publish feed... neither signing key or wif are valid');
+                if (Object.keys(signing_keys).length) {
+                    this.signing_valid = true;
+                }
+                if (tries < retry_conf.feed_attempts) {
+                    switchNode();
+                    console.error(`Will retry in ${retry_conf.feed_delay} seconds`);
+                    return delay(retry_conf.feed_delay * 1000)
+                        .then(() => this.publish_feed(rate, tries + 1))
+                        .catch(console.error);
+                }
+                console.error(`Giving up. Tried ${tries} times`);
+                return reject(err);
             }
         } catch
             (e) {
