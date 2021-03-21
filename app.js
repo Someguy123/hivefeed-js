@@ -49,7 +49,7 @@ class HiveAcc {
          * @throws {Error<string:msg>}    If private key is invalid
          */
 
-        if (!hive.auth.isWif(config.wif) && !Object.keys(signing_keys).length) {
+        if (!hive.auth.isWif(config.wif) && signing_keys && !Object.keys(signing_keys).length) {
             throw new Error('The private key you specified is not valid. Be aware Hive private keys start with a 5.');
         }
         this.user_data = {username, active_wif, signing_keys};
@@ -145,7 +145,7 @@ class HiveAcc {
 
     login(reload = false) {
         /**
-         * Checks if an account + active private key match.
+         * Checks if an account + active private key or signing keys match.
          * Resolves with user data they do, rejects if there's a problem
          */
         if (this.wif_valid) {
@@ -164,7 +164,7 @@ class HiveAcc {
 
                 }
                 try {
-                    if (signing_keys.hasOwnProperty(auths.signing)) {
+                    if (signing_keys && signing_keys.hasOwnProperty(auths.signing)) {
                         this.signing_valid = true;
                     }
                 } catch (e) {
@@ -178,7 +178,7 @@ class HiveAcc {
         });
     }
 
-    publish_feed(rate, tries = 0) {
+    async publish_feed(rate, tries = 0) {
         try {
             // var tr = new TransactionBuilder();
             var ex_data = rate.toFixed(3) + ` ${config.base_symbol}`;
@@ -193,7 +193,7 @@ class HiveAcc {
             var exchangeRate = {base: ex_data, quote: quote.toFixed(3) + ` ${config.quote_symbol}`};
             var {username, active_wif, signing_keys} = this.user_data;
             if (this.signing_valid) {
-                hive.api.getWitnessByAccount(username, (err, result) => {
+                hive.api.getWitnessByAccount(username, async (err, result) => {
                         if (err) {
                             console.error(`A problem occurred while getting current signing key`);
                             console.error('Most likely the RPC node is down.');
@@ -213,6 +213,7 @@ class HiveAcc {
                             console.error(`A problem occurred while getting current signing key`);
                             console.error('Most likely the account is not a witness.');
                             if (tries < retry_conf.feed_attempts) {
+                                await this.login();
                                 switchNode();
                                 console.error(`Will retry in ${retry_conf.feed_delay} seconds`);
                                 return delay(retry_conf.feed_attempts * 1000)
@@ -229,12 +230,13 @@ class HiveAcc {
                                 "hbd_exchange_rate": exchangeRate
                             };
                             let op = hive.utils.buildWitnessUpdateOp(username, props);
-                            hive.broadcast.witnessSetProperties(signing_keys[signing], username, op[1].props, [], (err, result) => {
+                            hive.broadcast.witnessSetProperties(signing_keys[signing], username, op[1].props, [], async (err, result) => {
                                 if (err) {
                                     console.error('Failed to publish feed...');
                                     var msg = ('message' in err) ? err.message : err;
                                     console.error(`reason: ${msg}`);
                                     if (tries < retry_conf.feed_attempts) {
+                                        await this.login();
                                         switchNode();
                                         console.error(`Will retry in ${retry_conf.feed_delay} seconds`);
                                         return delay(retry_conf.feed_delay * 1000)
@@ -280,9 +282,7 @@ class HiveAcc {
                     });
             } else {
                 console.error('Failed to publish feed... neither signing key or wif are valid');
-                if (Object.keys(signing_keys).length) {
-                    this.signing_valid = true;
-                }
+                await this.login();
                 if (tries < retry_conf.feed_attempts) {
                     switchNode();
                     console.error(`Will retry in ${retry_conf.feed_delay} seconds`);
@@ -293,11 +293,9 @@ class HiveAcc {
                 console.error(`Giving up. Tried ${tries} times`);
                 return reject(err);
             }
-        } catch
-            (e) {
+        } catch (e) {
             console.error(e);
         }
-        console.log();
     }
 }
 
@@ -365,7 +363,7 @@ function startup(){
     }).catch((e) => {
         console.error(`An error occurred attempting to log into ${config.name}...`);
         console.error(`Reason: ${e}`, e);
-        if (!Object.keys(config.signing_keys).length){
+        if (config.signing_keys === undefined || !Object.keys(config.signing_keys).length){
             console.error("Exiting");
             process.exit(1);
         } else {
