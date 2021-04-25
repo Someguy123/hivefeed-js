@@ -85,7 +85,9 @@ Configuration
 ```
 {
     "name": "your hive name",
-    "wif": "your active private key",
+    "signing_keys" : {
+    "Public Signing Key" : "Private Signing Key"
+    },
     "network": "hive",
     "interval": 60,
     "peg": false,
@@ -95,7 +97,7 @@ Configuration
 
 - **name** (REQUIRED) - The name of the hive account that will publish the feed
 
-- **wif** (REQUIRED) - The active private key for the hive account
+**signing_keys** (dictionary - alternative/combo to `wif`) - Witness signing keys as a dictionary `{"pubkey": "privkey", ...}`, can be used as either an alternative to `wif`, or in combination as backup keys
 
 - **node** (default: `https://hived.privex.io`) - The HTTP(S) URL of the hive node to use, e.g. `https://hived.privex.io`
 
@@ -115,6 +117,7 @@ Advanced Configuration Options
 
 Just set the correct `network`, and those settings will be automatically updated to the correct values.
 
+`wif` - Your private active key if you'd use that instead. You can use this in replacement to `signing_keys` or alongside it.
 
 `ex_symbol` - The symbol we're obtaining the price of. Default: `hive`
 
