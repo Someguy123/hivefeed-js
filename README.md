@@ -97,7 +97,7 @@ Configuration
 
 - **name** (REQUIRED) - The name of the hive account that will publish the feed
 
-**signing_keys** (dictionary - alternative/combo to `wif`) - Witness signing keys as a dictionary `{"pubkey": "privkey", ...}`, can be used as either an alternative to `wif`, or in combination as backup keys
+- **signing_keys** (dictionary - alternative/combo to `wif`) - Witness signing keys as a dictionary `{"pubkey": "privkey", ...}`, can be used as either an alternative to `wif`, or in combination as backup keys
 
 - **node** (default: `https://hived.privex.io`) - The HTTP(S) URL of the hive node to use, e.g. `https://hived.privex.io`
 
