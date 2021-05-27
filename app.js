@@ -32,7 +32,8 @@ for (var t_arg of process.argv) {
     }
 }
 
-hive.api.setOptions({url: config.node});
+// hive.api.setOptions({url: config.node});
+hive.api.setOptions({url: config.node, address_prefix: config.address_prefix ,chain_id: config.chain_id})
 
 // used for re-trying failed promises
 function delay(t) {
