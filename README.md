@@ -4,7 +4,7 @@ Hive Feed JS
 This is a Hive Price Feed for witnesses on the [HIVE Network](https://hive.io). It's
 written in Node.JS and uses Hive's [Hive-JS](https://www.npmjs.com/package/@hiveio/hive-js).
 
-Recommended NodeJS version: v12.19.0
+Recommended NodeJS version: v12.19.0.
 
 Installation
 ========
@@ -18,7 +18,7 @@ cp config.example.json config.json
 nano config.json
 ```
 
-I recommend using Docker, however you can also use a locally installed copy of Node v8.11.4.
+I recommend using Docker, however you can also use a locally installed copy of Node v8.11.4 or higher.
 
 **Starting Via Docker**
 
@@ -103,7 +103,7 @@ Configuration
 
 - **interval** (default: `60`) - The number of minutes between publishing the feed
 
-- **network** (default: `hive`) - The network (chain) you're using this for. Options are: `hive`
+- **network** (default: `hive`) - The network (chain) you're using this for. For using the hive long term testnet, set to `testnet`. Options are: `hive` `testnet`
 
 - **peg** (default: `false`) - Set to true only if you want to adjust your price feed bias
 
@@ -129,6 +129,9 @@ Just set the correct `network`, and those settings will be automatically updated
 
 `alternate_nodes` - Alternate nodes to use if the main provided one is down. Provided as an array of nodes. Default : `["https://api.hive.blog", "https://api.deathwing.me"]`
 
+`chain_id` - Chain id of the chain that you are using. Default: `beeab0de00000000000000000000000000000000000000000000000000000000`
+
+`address_prefix` -  Address prefix of the chain that you are using. Default: `STM`
 
 `disable_exchanges` - A list of exchange `code` 's to disable. Exchanges listed here will not be used
 directly (i.e. get price for A/B), nor indirectly (i.e. get price for A/D by converting A/C then C/D).
