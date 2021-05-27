@@ -22,7 +22,7 @@ log(`Loaded configuration:
 Username: ${config.name}
 Bias: ${config.peg ? config.peg_multi : 'Disabled'}
 RPC Node: ${config.node}
-Alternate Nodes: ${config.alternate_nodes.join(", ")}`);
+Alternate Nodes: ${config.alternate_nodes.join(', ')}`);
 console.log('-------------');
 
 global.verbose = false;
@@ -32,7 +32,6 @@ for (var t_arg of process.argv) {
     }
 }
 
-// hive.api.setOptions({url: config.node});
 hive.api.setOptions({url: config.node, address_prefix: config.address_prefix ,chain_id: config.chain_id})
 
 // used for re-trying failed promises
@@ -227,8 +226,8 @@ class HiveAcc {
                         let signing = result.signing_key;
                         if (signing_keys.hasOwnProperty(signing)) {
                             let props = {
-                                "key": signing,
-                                "hbd_exchange_rate": exchangeRate
+                                'key': signing,
+                                'hbd_exchange_rate': exchangeRate
                             };
                             let op = hive.utils.buildWitnessUpdateOp(username, props);
                             hive.broadcast.witnessSetProperties(signing_keys[signing], username, op[1].props, [], async (err, result) => {
@@ -365,7 +364,7 @@ function startup(){
         console.error(`An error occurred attempting to log into ${config.name}...`);
         console.error(`Reason: ${e}`, e);
         if (config.signing_keys === undefined || !Object.keys(config.signing_keys).length){
-            console.error("Exiting");
+            console.error('Exiting');
             process.exit(1);
         } else {
             console.log(`Trying again in ${config.interval} minute(s)`);
