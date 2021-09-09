@@ -204,7 +204,7 @@ class HiveAcc {
                                 console.error(`Will retry in ${retry_conf.feed_delay} seconds`);
                                 return delay(retry_conf.feed_attempts * 1000)
                                     .then(() => resolve(this.publish_feed(feed, tries + 1)))
-                                    .catch((e) => reject(e));
+                                    .catch((e) => console.error(e));
                             }
                             console.error(`Giving up. Tried ${tries} times`);
                             return reject(`Failed to publish in after ${tries} attempts.`);
