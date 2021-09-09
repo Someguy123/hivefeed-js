@@ -249,7 +249,7 @@ class HiveAcc {
 
                                 log(`Data published at: ${new Date()}`); //Not cure if this one will work
                                 log('Successfully published feed.');
-                                log(`TXID: ${result.id} TXNUM: ${result.trx_num}`);
+                                log(`TXID: ${result.id}`);
                             });
                         } else {
                             this.signing_valid = false;
@@ -278,7 +278,7 @@ class HiveAcc {
                         }
                         log(`Data published at: ${new Date()}`); //Not cure if this one will work
                         log('Successfully published feed.');
-                        log(`TXID: ${r.id} TXNUM: ${r.trx_num}`);
+                        log(`TXID: ${r.id}`);
                     });
             } else {
                 console.error('Failed to publish feed... neither signing key or wif are valid');
