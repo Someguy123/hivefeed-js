@@ -255,7 +255,7 @@ class HiveAcc {
                             this.signing_valid = false;
                             return delay(retry_conf.feed_attempts * 1000)
                                 .then(() => resolve(this.publish_feed(feed, tries + 1)))
-                                .catch((e) => reject(e));
+                                .catch((e) => console.error(e));
                         }
                     }
                 );
