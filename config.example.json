@@ -1,8 +1,6 @@
 {
   "name": "your hive name",
-  "signing_keys" : {
-    "Public Signing Key" : "Private Signing Key"
-  },
+  "wif" : "your_hive_account_active_or_posting_key",
   "network": "hive",
   
   "interval": 60,
