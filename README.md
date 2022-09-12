@@ -6,6 +6,8 @@ written in Node.JS and uses Hive's [Hive-JS](https://www.npmjs.com/package/@hive
 
 Recommended NodeJS version: v12.19.0.
 
+#### If you are using NodeJS 17+, make sure you have IPv6 properly configured. NodeJS made a change and uses verbatim as true for default dns lookup. If you don't have IPv6 on your machine and you try to connect to a IPv6 address, the connection will fail. Read https://nodejs.org/api/dns.html for more information. 
+
 Installation
 ========
 
