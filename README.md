@@ -4,9 +4,9 @@ Hive Feed JS
 This is a Hive Price Feed for witnesses on the [HIVE Network](https://hive.io). It's
 written in Node.JS and uses Hive's [Hive-JS](https://www.npmjs.com/package/@hiveio/hive-js).
 
-Recommended NodeJS version: v12.19.0.
+Recommended/Maximum NodeJS version: v16.17.1
 
-#### If you are using NodeJS 17+, make sure you have IPv6 properly configured. NodeJS made a change and uses verbatim as true for default dns lookup. If you don't have IPv6 on your machine and you try to connect to a IPv6 address, the connection will fail. Read https://nodejs.org/api/dns.html for more information. 
+#### Due to OpenSSL deprecating some algorithms, NodeJSv17+ will not work for the time being.
 
 Installation
 ========
