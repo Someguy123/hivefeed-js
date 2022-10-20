@@ -4,9 +4,7 @@ Hive Feed JS
 This is a Hive Price Feed for witnesses on the [HIVE Network](https://hive.io). It's
 written in Node.JS and uses Hive's [Hive-JS](https://www.npmjs.com/package/@hiveio/hive-js).
 
-Recommended/Maximum NodeJS version: v16.17.1
-
-#### Due to OpenSSL deprecating some algorithms, NodeJSv17+ will not work for the time being.
+Recommended Node Version: Node 18
 
 Installation
 ========
