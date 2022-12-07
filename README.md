@@ -67,18 +67,6 @@ git pull
 ./run.sh restart
 ```
 
-**Crontab**
-
-As NodeJS is somewhat unreliable, it's recommended to use a cron to restart it every 3 to 4 hrs.
-
-    crontab -e
-
-For docker you can use the following (restarts every 4 hrs)
-
-```
-0 */4   *  *    *    docker restart hivefeed
-```
-
 Configuration
 ===========
 
