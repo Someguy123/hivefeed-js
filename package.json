@@ -1,6 +1,6 @@
 {
   "name": "hivefeed-js",
-  "version": "4.3.3",
+  "version": "4.4.0",
   "description": "Hive Price Feed in JS with automatic retry for down nodes",
   "repository": "https://github.com/someguy123/hivefeed-js",
   "main": "app.js",
