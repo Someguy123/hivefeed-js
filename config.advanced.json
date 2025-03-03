@@ -8,7 +8,7 @@
     "interval": 60,
     "peg": false,
     "peg_multi": 1.0,
-    "node": "https://hivded.privex.io",
+    "node": "https://api.deathwing.me",
     "alternate_nodes" : ["https://api.deathwing.me", "https://api.hive.blog"],
     "chain_id" : "beeab0de00000000000000000000000000000000000000000000000000000000",
     "address_prefix" : "STM",

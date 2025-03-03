@@ -87,7 +87,7 @@ Configuration
 
 - **signing_keys** (dictionary - alternative/combo to `wif`) - Witness signing keys as a dictionary `{"pubkey": "privkey", ...}`, can be used as either an alternative to `wif`, or in combination as backup keys
 
-- **node** (default: `https://api.deathwing.me/`) - The HTTP(S) URL of the hive node to use, e.g. `https://hived.privex.io`
+- **node** (default: `https://api.deathwing.me/`) - The HTTP(S) URL of the hive node to use, e.g. `https://api.deathwing.me`
 
 - **interval** (default: `60`) - The number of minutes between publishing the feed
 
